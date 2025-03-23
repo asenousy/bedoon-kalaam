@@ -1,5 +1,5 @@
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Movie {
   title: string;
@@ -37,10 +37,34 @@ const movies: Movie[] = [
 
 export default function App() {
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(0);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    
+    if (timeLeft > 0) {
+      timer = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) {
+        clearInterval(timer);
+      }
+    };
+  }, [timeLeft]);
 
   const getRandomMovie = () => {
     const randomIndex = Math.floor(Math.random() * movies.length);
     setMovie(movies[randomIndex]);
+    setTimeLeft(120); // 2 minutes in seconds
+  };
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -49,14 +73,18 @@ export default function App() {
         <View style={styles.movieContainer}>
           <Text style={styles.title}>{movie.title}</Text>
           <Text style={styles.details}>{movie.year} • {movie.genre}</Text>
+          {timeLeft > 0 && (
+            <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
+          )}
         </View>
       ) : (
         <Text style={styles.placeholder}>Click the button to get a movie recommendation!</Text>
       )}
       
       <TouchableOpacity 
-        style={styles.button}
+        style={[styles.button, timeLeft > 0 && styles.buttonDisabled]}
         onPress={getRandomMovie}
+        disabled={timeLeft > 0}
       >
         <Text style={styles.buttonText}>
           {movie ? 'Get Another Movie' : 'Get Movie Recommendation'}
@@ -92,6 +120,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
+    marginBottom: 20,
+  },
+  timer: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#007AFF',
+    marginTop: 15,
+    letterSpacing: 2,
   },
   placeholder: {
     fontSize: 16,
@@ -104,6 +140,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 10,
     width: '100%',
+  },
+  buttonDisabled: {
+    backgroundColor: '#ccc',
   },
   buttonText: {
     color: 'white',
