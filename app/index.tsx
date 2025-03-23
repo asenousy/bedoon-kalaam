@@ -1,5 +1,9 @@
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, I18nManager } from 'react-native';
 import { useState, useEffect } from 'react';
+
+// Force RTL layout
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
 
 interface Movie {
   title: string;
@@ -9,29 +13,29 @@ interface Movie {
 
 const movies: Movie[] = [
   {
-    title: "The Shawshank Redemption",
+    title: "شاوشانك ريديمبشن",
     year: 1994,
-    genre: "Drama"
+    genre: "دراما"
   },
   {
-    title: "The Godfather",
+    title: "العراب",
     year: 1972,
-    genre: "Crime/Drama"
+    genre: "جريمة/دراما"
   },
   {
-    title: "Pulp Fiction",
+    title: "بولب فيكشن",
     year: 1994,
-    genre: "Crime/Drama"
+    genre: "جريمة/دراما"
   },
   {
-    title: "The Dark Knight",
+    title: "فارس الظلام",
     year: 2008,
-    genre: "Action/Drama"
+    genre: "أكشن/دراما"
   },
   {
-    title: "Fight Club",
+    title: "نادي القتال",
     year: 1999,
-    genre: "Drama"
+    genre: "دراما"
   }
 ];
 
@@ -78,7 +82,7 @@ export default function App() {
           )}
         </View>
       ) : (
-        <Text style={styles.placeholder}>Click the button to get a movie recommendation!</Text>
+        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح فيلم!</Text>
       )}
       
       <TouchableOpacity 
@@ -87,7 +91,7 @@ export default function App() {
         disabled={timeLeft > 0}
       >
         <Text style={styles.buttonText}>
-          {movie ? 'Get Another Movie' : 'Get Movie Recommendation'}
+          {movie ? 'اقترح فيلم آخر' : 'احصل على اقتراح فيلم'}
         </Text>
       </TouchableOpacity>
     </View>
@@ -111,16 +115,18 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 10,
+    writingDirection: 'rtl',
   },
   details: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
+    writingDirection: 'rtl',
   },
   timer: {
     fontSize: 32,
@@ -128,12 +134,14 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     marginTop: 15,
     letterSpacing: 2,
+    fontFamily: 'System',
   },
   placeholder: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#666',
     textAlign: 'center',
     marginBottom: 30,
+    writingDirection: 'rtl',
   },
   button: {
     backgroundColor: '#007AFF',
@@ -146,8 +154,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
+    writingDirection: 'rtl',
   },
 });
