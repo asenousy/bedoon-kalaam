@@ -1,5 +1,6 @@
-import { View, StyleSheet, TouchableOpacity, Text, I18nManager } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal } from 'react-native';
 import { useState, useEffect } from 'react';
+import { Ionicons } from '@expo/vector-icons';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
@@ -8,6 +9,12 @@ I18nManager.forceRTL(true);
 interface Item {
   title: string;
   category: 'movies' | 'plays' | 'songs';
+}
+
+interface CategorySettings {
+  movies: boolean;
+  plays: boolean;
+  songs: boolean;
 }
 
 const movies: Item[] = [
@@ -54,6 +61,12 @@ const allItems = [...movies, ...plays, ...songs];
 export default function App() {
   const [item, setItem] = useState<Item | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [categorySettings, setCategorySettings] = useState<CategorySettings>({
+    movies: true,
+    plays: true,
+    songs: true,
+  });
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -72,8 +85,15 @@ export default function App() {
   }, [timeLeft]);
 
   const getRandomItem = () => {
-    const randomIndex = Math.floor(Math.random() * allItems.length);
-    setItem(allItems[randomIndex]);
+    // Filter items based on enabled categories
+    const enabledItems = allItems.filter(item => categorySettings[item.category]);
+    
+    if (enabledItems.length === 0) {
+      return; // Don't select if no categories are enabled
+    }
+
+    const randomIndex = Math.floor(Math.random() * enabledItems.length);
+    setItem(enabledItems[randomIndex]);
     setTimeLeft(120); // 2 minutes in seconds
   };
 
@@ -81,6 +101,13 @@ export default function App() {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const toggleCategory = (category: keyof CategorySettings) => {
+    setCategorySettings(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
   };
 
   const getCategoryTitle = (category: string) => {
@@ -93,6 +120,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity 
+        style={styles.settingsIcon}
+        onPress={() => setShowSettings(true)}
+      >
+        <Ionicons name="settings-outline" size={32} color="#4A90E2" />
+      </TouchableOpacity>
+
       {timeLeft > 0 && (
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
       )}
@@ -113,6 +147,55 @@ export default function App() {
           اقترح آخر
         </Text>
       </TouchableOpacity>
+
+      <Modal
+        visible={showSettings}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowSettings(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>اختر الفئات</Text>
+            
+            <TouchableOpacity 
+              style={[styles.categoryToggle, categorySettings.movies && styles.categoryToggleActive]}
+              onPress={() => toggleCategory('movies')}
+            >
+              <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
+                أفلام
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.categoryToggle, categorySettings.plays && styles.categoryToggleActive]}
+              onPress={() => toggleCategory('plays')}
+            >
+              <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
+                مسرحيات
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.categoryToggle, categorySettings.songs && styles.categoryToggleActive]}
+              onPress={() => toggleCategory('songs')}
+            >
+              <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
+                أغاني
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.button, styles.closeButton]}
+              onPress={() => setShowSettings(false)}
+            >
+              <Text style={styles.buttonText}>
+                إغلاق
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -124,6 +207,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  settingsIcon: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#4A90E2',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
   timer: {
     fontSize: 72,
@@ -190,5 +289,48 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     writingDirection: 'rtl',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 20,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
+    marginBottom: 20,
+    writingDirection: 'rtl',
+  },
+  categoryToggle: {
+    width: '100%',
+    padding: 15,
+    borderRadius: 12,
+    backgroundColor: '#F5F5F5',
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  categoryToggleActive: {
+    backgroundColor: '#FF6B6B',
+  },
+  categoryToggleText: {
+    fontSize: 18,
+    color: '#666666',
+    writingDirection: 'rtl',
+  },
+  categoryToggleTextActive: {
+    color: '#FFFFFF',
+  },
+  closeButton: {
+    marginTop: 20,
+    backgroundColor: '#4A90E2',
   },
 });
