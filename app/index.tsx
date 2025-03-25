@@ -5,42 +5,54 @@ import { useState, useEffect } from 'react';
 I18nManager.allowRTL(true);
 I18nManager.forceRTL(true);
 
-interface Movie {
+interface Item {
   title: string;
-  year: number;
-  genre: string;
+  category: 'movies' | 'plays' | 'songs';
 }
 
-const movies: Movie[] = [
-  {
-    title: "شاوشانك ريديمبشن",
-    year: 1994,
-    genre: "دراما"
-  },
-  {
-    title: "العراب",
-    year: 1972,
-    genre: "جريمة/دراما"
-  },
-  {
-    title: "بولب فيكشن",
-    year: 1994,
-    genre: "جريمة/دراما"
-  },
-  {
-    title: "فارس الظلام",
-    year: 2008,
-    genre: "أكشن/دراما"
-  },
-  {
-    title: "نادي القتال",
-    year: 1999,
-    genre: "دراما"
-  }
+const movies: Item[] = [
+  { title: "الزوجة الثانية", category: 'movies' },
+  { title: "الكرنك", category: 'movies' },
+  { title: "الرجل الذي فقد ظله", category: 'movies' },
+  { title: "الحرام", category: 'movies' },
+  { title: "الوسادة الخالية", category: 'movies' },
+  { title: "الرصاصة لا تزال في جيبي", category: 'movies' },
+  { title: "البداية", category: 'movies' },
+  { title: "اللص والكلاب", category: 'movies' },
+  { title: "الخروج من الجنة", category: 'movies' },
+  { title: "الطوق والإسورة", category: 'movies' }
 ];
 
+const plays: Item[] = [
+  { title: "مدرسة المشاغبين", category: 'plays' },
+  { title: "الزعيم", category: 'plays' },
+  { title: "الواد سيد الشغال", category: 'plays' },
+  { title: "البيجامة الحمراء", category: 'plays' },
+  { title: "السلطان الحائر", category: 'plays' },
+  { title: "اللعب على الحبلين", category: 'plays' },
+  { title: "الزير سالم", category: 'plays' },
+  { title: "السلطان الحائر", category: 'plays' },
+  { title: "البيجامة الحمراء", category: 'plays' },
+  { title: "اللعب على الحبلين", category: 'plays' }
+];
+
+const songs: Item[] = [
+  { title: "أه يا سلام", category: 'songs' },
+  { title: "أنا عندي نصيب", category: 'songs' },
+  { title: "بتلوموني ليه", category: 'songs' },
+  { title: "حبيبي دايماً", category: 'songs' },
+  { title: "خدني معاك", category: 'songs' },
+  { title: "رايحين فين", category: 'songs' },
+  { title: "سألوني الناس", category: 'songs' },
+  { title: "شمس الأصيل", category: 'songs' },
+  { title: "عاش اللي قال", category: 'songs' },
+  { title: "كان عندي قلب", category: 'songs' }
+];
+
+const allItems = [...movies, ...plays, ...songs];
+
 export default function App() {
-  const [movie, setMovie] = useState<Movie | null>(null);
+  const [item, setItem] = useState<Item | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
 
   useEffect(() => {
@@ -59,9 +71,9 @@ export default function App() {
     };
   }, [timeLeft]);
 
-  const getRandomMovie = () => {
-    const randomIndex = Math.floor(Math.random() * movies.length);
-    setMovie(movies[randomIndex]);
+  const getRandomItem = () => {
+    const randomIndex = Math.floor(Math.random() * allItems.length);
+    setItem(allItems[randomIndex]);
     setTimeLeft(120); // 2 minutes in seconds
   };
 
@@ -71,27 +83,34 @@ export default function App() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  const getCategoryTitle = (category: string) => {
+    switch (category) {
+      case 'movies': return 'فيلم';
+      case 'plays': return 'مسرحية';
+      case 'songs': return 'أغنية';
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {movie ? (
-        <View style={styles.movieContainer}>
-          <Text style={styles.title}>{movie.title}</Text>
-          <Text style={styles.details}>{movie.year} • {movie.genre}</Text>
+      {item ? (
+        <View style={styles.itemContainer}>
+          <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
+          <Text style={styles.title}>{item.title}</Text>
           {timeLeft > 0 && (
             <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
           )}
         </View>
       ) : (
-        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح فيلم!</Text>
+        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح!</Text>
       )}
       
       <TouchableOpacity 
-        style={[styles.button, timeLeft > 0 && styles.buttonDisabled]}
-        onPress={getRandomMovie}
-        disabled={timeLeft > 0}
+        style={styles.button}
+        onPress={getRandomItem}
       >
         <Text style={styles.buttonText}>
-          {movie ? 'اقترح فيلم آخر' : 'احصل على اقتراح فيلم'}
+          اقترح آخر
         </Text>
       </TouchableOpacity>
     </View>
@@ -101,56 +120,69 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF9E6', // Warm light yellow background
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
   },
-  movieContainer: {
+  itemContainer: {
     alignItems: 'center',
     marginBottom: 30,
     padding: 20,
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
+    borderRadius: 15,
+    backgroundColor: '#FFFFFF',
     width: '100%',
+    shadowColor: '#FFB74D', // Warm orange shadow
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
+  category: {
+    fontSize: 18,
+    color: '#4A90E2', // Bright blue text
     marginBottom: 10,
     writingDirection: 'rtl',
   },
-  details: {
-    fontSize: 18,
-    color: '#666',
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
     writingDirection: 'rtl',
+    color: '#FF6B6B', // Warm coral red
   },
   timer: {
     fontSize: 32,
     fontWeight: 'bold',
-    color: '#007AFF',
+    color: '#FFB74D', // Warm orange timer
     marginTop: 15,
     letterSpacing: 2,
     fontFamily: 'System',
   },
   placeholder: {
     fontSize: 18,
-    color: '#666',
+    color: '#4A90E2', // Bright blue text
     textAlign: 'center',
     marginBottom: 30,
     writingDirection: 'rtl',
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#FF6B6B', // Warm coral red button
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 12,
     width: '100%',
-  },
-  buttonDisabled: {
-    backgroundColor: '#ccc',
+    shadowColor: '#FF6B6B', // Warm coral red shadow
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
   buttonText: {
     color: 'white',
