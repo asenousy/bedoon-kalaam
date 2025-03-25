@@ -93,13 +93,13 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      {timeLeft > 0 && (
+        <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
+      )}
       {item ? (
         <View style={styles.itemContainer}>
           <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
           <Text style={styles.title}>{item.title}</Text>
-          {timeLeft > 0 && (
-            <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
-          )}
         </View>
       ) : (
         <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح!</Text>
@@ -124,6 +124,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
+  },
+  timer: {
+    fontSize: 72,
+    fontWeight: 'bold',
+    color: '#FFB74D',
+    marginBottom: 40,
+    letterSpacing: 2,
+    fontFamily: 'System',
   },
   itemContainer: {
     alignItems: 'center',
@@ -154,14 +162,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     writingDirection: 'rtl',
     color: '#FF6B6B', // Warm coral red
-  },
-  timer: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFB74D', // Warm orange timer
-    marginTop: 15,
-    letterSpacing: 2,
-    fontFamily: 'System',
   },
   placeholder: {
     fontSize: 18,
