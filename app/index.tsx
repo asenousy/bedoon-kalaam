@@ -1,7 +1,6 @@
 import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal } from 'react-native';
 import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { Platform } from 'react-native';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
@@ -119,22 +118,13 @@ export default function App() {
     }
   };
 
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'movies': return 'film-outline';
-      case 'plays': return 'people-outline';
-      case 'songs': return 'musical-notes-outline';
-      default: return 'help-outline';
-    }
-  };
-
   return (
     <View style={styles.container}>
       <TouchableOpacity 
         style={styles.settingsIcon}
         onPress={() => setShowSettings(true)}
       >
-        <Ionicons name="settings-outline" size={32} color="#1976D2" />
+        <Ionicons name="settings-outline" size={32} color="#4A90E2" />
       </TouchableOpacity>
 
       {timeLeft > 0 && (
@@ -142,10 +132,7 @@ export default function App() {
       )}
       {item ? (
         <View style={styles.itemContainer}>
-          <View style={styles.categoryContainer}>
-            <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
-            <Ionicons name={getCategoryIcon(item.category)} size={24} color="#1976D2" style={styles.categoryIcon} />
-          </View>
+          <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
           <Text style={styles.title}>{item.title}</Text>
         </View>
       ) : (
@@ -175,51 +162,27 @@ export default function App() {
               style={[styles.categoryToggle, categorySettings.movies && styles.categoryToggleActive]}
               onPress={() => toggleCategory('movies')}
             >
-              <View style={styles.categoryToggleContent}>
-                <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
-                  أفلام
-                </Text>
-                <Ionicons 
-                  name="film-outline" 
-                  size={24} 
-                  color={categorySettings.movies ? '#FFFFFF' : '#424242'} 
-                  style={styles.categoryToggleIcon}
-                />
-              </View>
+              <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
+                أفلام
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.categoryToggle, categorySettings.plays && styles.categoryToggleActive]}
               onPress={() => toggleCategory('plays')}
             >
-              <View style={styles.categoryToggleContent}>
-                <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
-                  مسرحيات
-                </Text>
-                <Ionicons 
-                  name="people-outline" 
-                  size={24} 
-                  color={categorySettings.plays ? '#FFFFFF' : '#424242'} 
-                  style={styles.categoryToggleIcon}
-                />
-              </View>
+              <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
+                مسرحيات
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.categoryToggle, categorySettings.songs && styles.categoryToggleActive]}
               onPress={() => toggleCategory('songs')}
             >
-              <View style={styles.categoryToggleContent}>
-                <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
-                  أغاني
-                </Text>
-                <Ionicons 
-                  name="musical-notes-outline" 
-                  size={24} 
-                  color={categorySettings.songs ? '#FFFFFF' : '#424242'} 
-                  style={styles.categoryToggleIcon}
-                />
-              </View>
+              <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
+                أغاني
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -240,7 +203,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF8E1', // Slightly darker warm background for better contrast
+    backgroundColor: '#FFF9E6', // Warm light yellow background
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
@@ -252,7 +215,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#FFFFFF',
-    shadowColor: '#1976D2', // Darker blue for better contrast
+    shadowColor: '#4A90E2',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -262,15 +225,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   timer: {
-    fontSize: 64, // Slightly smaller but still prominent
-    fontWeight: '700',
-    color: '#E65100', // Darker orange for better contrast
+    fontSize: 72,
+    fontWeight: 'bold',
+    color: '#FFB74D',
     marginBottom: 40,
     letterSpacing: 2,
-    fontFamily: Platform.select({
-      ios: 'System',
-      android: 'Roboto',
-    }),
+    fontFamily: 'System',
   },
   itemContainer: {
     alignItems: 'center',
@@ -279,7 +239,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     backgroundColor: '#FFFFFF',
     width: '100%',
-    shadowColor: '#E65100', // Darker orange shadow
+    shadowColor: '#FFB74D', // Warm orange shadow
     shadowOffset: {
       width: 0,
       height: 4,
@@ -288,55 +248,33 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  categoryContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 10,
-    height: 32, // Fixed height to ensure consistent vertical alignment
-  },
-  categoryIcon: {
-    marginLeft: 16,
-    height: 24, // Match icon size
-  },
-  categoryToggleContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 32, // Fixed height to ensure consistent vertical alignment
-  },
-  categoryToggleIcon: {
-    marginLeft: 16,
-    height: 24, // Match icon size
-  },
   category: {
-    fontSize: 20,
-    color: '#1976D2',
+    fontSize: 18,
+    color: '#4A90E2', // Bright blue text
+    marginBottom: 10,
     writingDirection: 'rtl',
-    fontWeight: '600',
   },
   title: {
-    fontSize: 28, // Slightly smaller but still prominent
-    fontWeight: '700',
+    fontSize: 32,
+    fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 20,
     writingDirection: 'rtl',
-    color: '#D32F2F', // Darker red for better contrast
+    color: '#FF6B6B', // Warm coral red
   },
   placeholder: {
-    fontSize: 20, // Increased font size
-    color: '#1976D2', // Darker blue for better contrast
+    fontSize: 18,
+    color: '#4A90E2', // Bright blue text
     textAlign: 'center',
     marginBottom: 30,
     writingDirection: 'rtl',
-    fontWeight: '500',
   },
   button: {
-    backgroundColor: '#D32F2F', // Darker red for better contrast
+    backgroundColor: '#FF6B6B', // Warm coral red button
     padding: 15,
     borderRadius: 12,
     width: '100%',
-    shadowColor: '#D32F2F', // Darker red shadow
+    shadowColor: '#FF6B6B', // Warm coral red shadow
     shadowOffset: {
       width: 0,
       height: 4,
@@ -346,15 +284,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   buttonText: {
-    color: '#FFFFFF',
-    fontSize: 20, // Increased font size
-    fontWeight: '700',
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
     textAlign: 'center',
     writingDirection: 'rtl',
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)', // Darker overlay for better contrast
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -366,9 +304,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 26, // Increased font size
-    fontWeight: '700',
-    color: '#D32F2F', // Darker red for better contrast
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
     marginBottom: 20,
     writingDirection: 'rtl',
   },
@@ -381,19 +319,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryToggleActive: {
-    backgroundColor: '#D32F2F', // Darker red for better contrast
+    backgroundColor: '#FF6B6B',
   },
   categoryToggleText: {
-    fontSize: 20, // Increased font size
-    color: '#424242', // Darker gray for better contrast
+    fontSize: 18,
+    color: '#666666',
     writingDirection: 'rtl',
-    fontWeight: '500',
   },
   categoryToggleTextActive: {
     color: '#FFFFFF',
   },
   closeButton: {
     marginTop: 20,
-    backgroundColor: '#1976D2', // Darker blue for better contrast
+    backgroundColor: '#4A90E2',
   },
 });
