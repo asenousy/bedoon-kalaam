@@ -132,7 +132,15 @@ export default function App() {
       )}
       {item ? (
         <View style={styles.itemContainer}>
-          <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
+          <View style={styles.categoryContainer}>
+            <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
+            <Ionicons 
+              name={item.category === 'movies' ? 'film-outline' : item.category === 'plays' ? 'ticket-outline' : 'musical-notes-outline'} 
+              size={18} 
+              color="#4A90E2" 
+              style={styles.categoryIcon} 
+            />
+          </View>
           <Text style={styles.title}>{item.title}</Text>
         </View>
       ) : (
@@ -248,9 +256,18 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  categoryContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    marginBottom: 4,
+  },
+  categoryIcon: {
+    marginLeft: 6,
+  },
   category: {
-    fontSize: 18,
-    color: '#4A90E2', // Bright blue text
+    fontSize: 16,
+    color: '#4A90E2',
+    fontWeight: '500',
     marginBottom: 10,
     writingDirection: 'rtl',
   },
