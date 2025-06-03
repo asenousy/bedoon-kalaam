@@ -170,27 +170,51 @@ export default function App() {
               style={[styles.categoryToggle, categorySettings.movies && styles.categoryToggleActive]}
               onPress={() => toggleCategory('movies')}
             >
-              <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
-                أفلام
-              </Text>
+              <View style={styles.categoryToggleContent}>
+                {categorySettings.movies && (
+                  <Ionicons name="checkmark-circle" size={24} color="white" />
+                )}
+                {!categorySettings.movies && (
+                  <Ionicons name="ellipse-outline" size={24} color="#888888" />
+                )}
+                <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
+                  أفلام
+                </Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.categoryToggle, categorySettings.plays && styles.categoryToggleActive]}
               onPress={() => toggleCategory('plays')}
             >
-              <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
-                مسرحيات
-              </Text>
+              <View style={styles.categoryToggleContent}>
+                {categorySettings.plays && (
+                  <Ionicons name="checkmark-circle" size={24} color="white" />
+                )}
+                {!categorySettings.plays && (
+                  <Ionicons name="ellipse-outline" size={24} color="#888888" />
+                )}
+                <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
+                  مسرحيات
+                </Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity 
               style={[styles.categoryToggle, categorySettings.songs && styles.categoryToggleActive]}
               onPress={() => toggleCategory('songs')}
             >
-              <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
-                أغاني
-              </Text>
+              <View style={styles.categoryToggleContent}>
+                {categorySettings.songs && (
+                  <Ionicons name="checkmark-circle" size={24} color="white" />
+                )}
+                {!categorySettings.songs && (
+                  <Ionicons name="ellipse-outline" size={24} color="#888888" />
+                )}
+                <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
+                  أغاني
+                </Text>
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity 
@@ -333,15 +357,32 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: '#F5F5F5',
     marginBottom: 10,
-    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
   categoryToggleActive: {
     backgroundColor: '#FF6B6B',
+    borderColor: '#E05050',
+    shadowColor: '#FF6B6B',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  categoryToggleContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
   },
   categoryToggleText: {
     fontSize: 18,
     color: '#666666',
     writingDirection: 'rtl',
+    fontWeight: '400',
   },
   categoryToggleTextActive: {
     color: '#FFFFFF',
