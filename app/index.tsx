@@ -1,8 +1,7 @@
 import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal } from 'react-native';
-import { useState, useEffect, useMemo } from 'react';
-import { Asset } from 'expo-asset';
-import * as FileSystem from 'expo-file-system';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import moviesList from '../movies.json';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
@@ -18,6 +17,11 @@ interface CategorySettings {
   plays: boolean;
   songs: boolean;
 }
+
+const movies: Item[] = (moviesList as string[]).map(title => ({
+  title,
+  category: 'movies',
+}));
 
 const plays: Item[] = [
   { title: "مدرسة المشاغبين", category: 'plays' },
@@ -45,20 +49,9 @@ const songs: Item[] = [
   { title: "كان عندي قلب", category: 'songs' }
 ];
 
-const csvAsset = require('../movies.csv');
-const parseMoviesCsv = (csvContent: string): Item[] => {
-  return csvContent
-    .split(/\r?\n/)
-    .map(line => line.split(',')[0]?.trim())
-    .filter((title): title is string => Boolean(title))
-    .map(title => ({
-      title,
-      category: 'movies',
-    }));
-};
+const allItems = [...movies, ...plays, ...songs];
 
 export default function App() {
-  const [movies, setMovies] = useState<Item[]>([]);
   const [item, setItem] = useState<Item | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [showSettings, setShowSettings] = useState<boolean>(false);
@@ -67,7 +60,6 @@ export default function App() {
     plays: true,
     songs: true,
   });
-  const [loadingMovies, setLoadingMovies] = useState<boolean>(true);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -84,32 +76,6 @@ export default function App() {
       }
     };
   }, [timeLeft]);
-
-  useEffect(() => {
-    const loadMovies = async () => {
-      try {
-        const asset = Asset.fromModule(csvAsset);
-        await asset.downloadAsync();
-        const fileUri = asset.localUri ?? asset.uri;
-        if (!fileUri) {
-          throw new Error('لم يتم العثور على ملف الأفلام.');
-        }
-        const csvFile = new FileSystem.File(fileUri);
-        const csvContent = await csvFile.text();
-        setMovies(parseMoviesCsv(csvContent));
-      } catch (error) {
-        console.error('Failed to load movies from CSV:', error);
-      } finally {
-        setLoadingMovies(false);
-      }
-    };
-
-    loadMovies();
-  }, []);
-
-  const allItems = useMemo(() => {
-    return [...movies, ...plays, ...songs];
-  }, [movies]);
 
   const getRandomItem = () => {
     // Filter items based on enabled categories
@@ -171,9 +137,7 @@ export default function App() {
           <Text style={styles.title}>{item.title}</Text>
         </View>
       ) : (
-        <Text style={styles.placeholder}>
-          {loadingMovies ? 'جاري تحميل قائمة الأفلام...' : 'اضغط على الزر للحصول على اقتراح!'}
-        </Text>
+        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح!</Text>
       )}
       
       <TouchableOpacity 
