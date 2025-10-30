@@ -50,10 +50,13 @@ const songs: Item[] = [
 ];
 
 const allItems = [...movies, ...plays, ...songs];
+const TIMER_MIN_MINUTES = 1;
+const TIMER_STEP_MINUTES = 1;
 
 export default function App() {
   const [item, setItem] = useState<Item | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(0);
+  const [timerMinutes, setTimerMinutes] = useState<number>(2);
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [categorySettings, setCategorySettings] = useState<CategorySettings>({
     movies: true,
@@ -87,7 +90,7 @@ export default function App() {
 
     const randomIndex = Math.floor(Math.random() * enabledItems.length);
     setItem(enabledItems[randomIndex]);
-    setTimeLeft(120); // 2 minutes in seconds
+    setTimeLeft(timerMinutes * 60);
   };
 
   const formatTime = (seconds: number): string => {
@@ -109,6 +112,14 @@ export default function App() {
       case 'plays': return 'مسرحية';
       case 'songs': return 'أغنية';
     }
+  };
+  
+  const adjustTimer = (deltaMinutes: number) => {
+    setTimerMinutes(prev => {
+      const nextMinutes = Math.max(TIMER_MIN_MINUTES, prev + deltaMinutes);
+      setTimeLeft(current => (current > 0 ? Math.min(current, nextMinutes * 60) : current));
+      return nextMinutes;
+    });
   };
 
   return (
@@ -209,6 +220,30 @@ export default function App() {
                 </Text>
               </View>
             </TouchableOpacity>
+
+            <View style={styles.timerSection}>
+              <Text style={styles.timerLabel}>مدة المؤقت (بالدقائق)</Text>
+              <View style={styles.timerStepper}>
+                <TouchableOpacity
+                  style={[
+                    styles.stepperButton,
+                    timerMinutes === TIMER_MIN_MINUTES && styles.stepperButtonDisabled
+                  ]}
+                  onPress={() => adjustTimer(-TIMER_STEP_MINUTES)}
+                  disabled={timerMinutes === TIMER_MIN_MINUTES}
+                >
+                  <Ionicons name="remove-outline" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+                <Text style={styles.timerValue}>{timerMinutes}</Text>
+                <TouchableOpacity
+                  style={styles.stepperButton}
+                  onPress={() => adjustTimer(TIMER_STEP_MINUTES)}
+                >
+                  <Ionicons name="add-outline" size={20} color="#FFFFFF" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.timerHint}>سيبدأ العد التنازلي من القيمة المحددة عند اختيار عنصر جديد.</Text>
+            </View>
 
             <TouchableOpacity 
               style={[styles.button, styles.closeButton]}
@@ -383,5 +418,52 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 20,
     backgroundColor: '#4A90E2',
+  },
+  timerSection: {
+    width: '100%',
+    marginTop: 20,
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: '#F5F7FB',
+  },
+  timerLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#4A90E2',
+    marginBottom: 12,
+    textAlign: 'right',
+    writingDirection: 'rtl',
+  },
+  timerStepper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderWidth: 1,
+    borderColor: '#E0E7FF',
+  },
+  stepperButton: {
+    backgroundColor: '#4A90E2',
+    borderRadius: 8,
+    padding: 8,
+  },
+  stepperButtonDisabled: {
+    backgroundColor: '#A9B8D9',
+  },
+  timerValue: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#4A90E2',
+  },
+  timerHint: {
+    marginTop: 8,
+    fontSize: 12,
+    color: '#6B7A99',
+    textAlign: 'right',
+    writingDirection: 'rtl',
+    lineHeight: 16,
   },
 });
