@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import moviesList from '../movies.json';
 import playsList from '../plays.json';
 import songsList from '../songs.json';
+import seriesList from '../series.json';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
@@ -11,13 +12,14 @@ I18nManager.forceRTL(true);
 
 interface Item {
   title: string;
-  category: 'movies' | 'plays' | 'songs';
+  category: 'movies' | 'plays' | 'songs' | 'series';
 }
 
 interface CategorySettings {
   movies: boolean;
   plays: boolean;
   songs: boolean;
+  series: boolean;
 }
 
 const movies: Item[] = (moviesList as string[]).map(title => ({
@@ -35,7 +37,12 @@ const songs: Item[] = (songsList as string[]).map(title => ({
   category: 'songs',
 }));
 
-const allItems = [...movies, ...plays, ...songs];
+const series: Item[] = (seriesList as string[]).map(title => ({
+  title,
+  category: 'series',
+}));
+
+const allItems = [...movies, ...plays, ...songs, ...series];
 const TIMER_MIN_MINUTES = 1;
 const TIMER_STEP_MINUTES = 1;
 
@@ -48,6 +55,7 @@ export default function App() {
     movies: true,
     plays: true,
     songs: true,
+    series: true,
   });
 
   useEffect(() => {
@@ -97,6 +105,7 @@ export default function App() {
       case 'movies': return 'فيلم';
       case 'plays': return 'مسرحية';
       case 'songs': return 'أغنية';
+      case 'series': return 'مسلسل';
     }
   };
   
@@ -125,7 +134,15 @@ export default function App() {
           <View style={styles.categoryContainer}>
             <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
             <Ionicons 
-              name={item.category === 'movies' ? 'film-outline' : item.category === 'plays' ? 'ticket-outline' : 'musical-notes-outline'} 
+              name={
+                item.category === 'movies'
+                  ? 'film-outline'
+                  : item.category === 'plays'
+                  ? 'ticket-outline'
+                  : item.category === 'songs'
+                  ? 'musical-notes-outline'
+                  : 'tv-outline'
+              } 
               size={18} 
               color="#4A90E2" 
               style={styles.categoryIcon} 
@@ -186,6 +203,23 @@ export default function App() {
                 )}
                 <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
                   مسرحيات
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity 
+              style={[styles.categoryToggle, categorySettings.series && styles.categoryToggleActive]}
+              onPress={() => toggleCategory('series')}
+            >
+              <View style={styles.categoryToggleContent}>
+                {categorySettings.series && (
+                  <Ionicons name="checkmark-circle" size={24} color="white" />
+                )}
+                {!categorySettings.series && (
+                  <Ionicons name="ellipse-outline" size={24} color="#888888" />
+                )}
+                <Text style={[styles.categoryToggleText, categorySettings.series && styles.categoryToggleTextActive]}>
+                  مسلسلات
                 </Text>
               </View>
             </TouchableOpacity>
