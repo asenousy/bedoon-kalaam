@@ -1,5 +1,5 @@
-import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal } from 'react-native';
-import { useState, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal, Animated } from 'react-native';
+import { useState, useEffect, useRef } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import moviesList from '../movies.json';
 import playsList from '../plays.json';
@@ -51,12 +51,15 @@ export default function App() {
   const [timeLeft, setTimeLeft] = useState<number>(0);
   const [timerMinutes, setTimerMinutes] = useState<number>(2);
   const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [showTimeUp, setShowTimeUp] = useState<boolean>(false);
   const [categorySettings, setCategorySettings] = useState<CategorySettings>({
     movies: true,
     plays: true,
     songs: true,
     series: true,
   });
+  const flashAnim = useRef(new Animated.Value(0)).current;
+  const flashAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -74,7 +77,53 @@ export default function App() {
     };
   }, [timeLeft]);
 
+  const stopFlashAnimation = () => {
+    if (flashAnimationRef.current) {
+      flashAnimationRef.current.stop();
+      flashAnimationRef.current = null;
+    }
+    flashAnim.setValue(0);
+  };
+
+  const startFlashAnimation = () => {
+    stopFlashAnimation();
+
+    flashAnimationRef.current = Animated.loop(
+      Animated.sequence([
+        Animated.timing(flashAnim, {
+          toValue: 1,
+          duration: 450,
+          useNativeDriver: true,
+        }),
+        Animated.timing(flashAnim, {
+          toValue: 0,
+          duration: 450,
+          useNativeDriver: true,
+        }),
+      ]),
+    );
+
+    flashAnimationRef.current.start();
+  };
+
+  useEffect(() => {
+    if (timeLeft === 0 && item) {
+      setShowTimeUp(true);
+      startFlashAnimation();
+    } else {
+      setShowTimeUp(prev => (prev ? false : prev));
+      stopFlashAnimation();
+    }
+
+    return () => {
+      stopFlashAnimation();
+    };
+  }, [timeLeft, item]);
+
   const getRandomItem = () => {
+    stopFlashAnimation();
+    setShowTimeUp(false);
+
     // Filter items based on enabled categories
     const enabledItems = allItems.filter(item => categorySettings[item.category]);
 
@@ -117,6 +166,16 @@ export default function App() {
     });
   };
 
+  const flashOpacity = flashAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.6, 1],
+  });
+
+  const flashScale = flashAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0.95, 1.05],
+  });
+
   return (
     <View style={styles.container}>
       <TouchableOpacity 
@@ -128,6 +187,20 @@ export default function App() {
 
       {timeLeft > 0 && (
         <Text style={styles.timer}>{formatTime(timeLeft)}</Text>
+      )}
+      {showTimeUp && (
+        <Animated.View
+          style={[
+            styles.timeUpContainer,
+            {
+              opacity: flashOpacity,
+              transform: [{ scale: flashScale }],
+            },
+          ]}
+        >
+          <Ionicons name="alarm-outline" size={32} color="#FFFFFF" style={styles.timeUpIcon} />
+          <Text style={styles.timeUpText}>انتهى الوقت!</Text>
+        </Animated.View>
       )}
       {item ? (
         <View style={styles.itemContainer}>
@@ -356,6 +429,34 @@ const styles = StyleSheet.create({
     color: '#4A90E2', // Bright blue text
     textAlign: 'center',
     marginBottom: 30,
+    writingDirection: 'rtl',
+  },
+  timeUpContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#E53935',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 14,
+    shadowColor: '#E53935',
+    shadowOffset: {
+      width: 0,
+      height: 6,
+    },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 7,
+    marginBottom: 40,
+  },
+  timeUpIcon: {
+    marginStart: 12,
+  },
+  timeUpText: {
+    color: '#FFFFFF',
+    fontSize: 30,
+    fontWeight: '800',
+    letterSpacing: 1,
     writingDirection: 'rtl',
   },
   button: {
