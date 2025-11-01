@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import moviesList from '../movies.json';
 import playsList from '../plays.json';
+import songsList from '../songs.json';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
@@ -29,18 +30,10 @@ const plays: Item[] = (playsList as string[]).map(title => ({
   category: 'plays',
 }));
 
-const songs: Item[] = [
-  { title: "أه يا سلام", category: 'songs' },
-  { title: "أنا عندي نصيب", category: 'songs' },
-  { title: "بتلوموني ليه", category: 'songs' },
-  { title: "حبيبي دايماً", category: 'songs' },
-  { title: "خدني معاك", category: 'songs' },
-  { title: "رايحين فين", category: 'songs' },
-  { title: "سألوني الناس", category: 'songs' },
-  { title: "شمس الأصيل", category: 'songs' },
-  { title: "عاش اللي قال", category: 'songs' },
-  { title: "كان عندي قلب", category: 'songs' }
-];
+const songs: Item[] = (songsList as string[]).map(title => ({
+  title,
+  category: 'songs',
+}));
 
 const allItems = [...movies, ...plays, ...songs];
 const TIMER_MIN_MINUTES = 1;
