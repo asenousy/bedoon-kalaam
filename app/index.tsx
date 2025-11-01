@@ -1,6 +1,7 @@
 import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal, Animated } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
 import moviesList from '../movies.json';
 import playsList from '../plays.json';
 import songsList from '../songs.json';
@@ -43,6 +44,7 @@ const series: Item[] = (seriesList as string[]).map(title => ({
 }));
 
 const allItems = [...movies, ...plays, ...songs, ...series];
+const TIME_UP_SOUND = require('../assets/sounds/time-up.mp3');
 const TIMER_MIN_MINUTES = 1;
 const TIMER_STEP_MINUTES = 1;
 
@@ -60,6 +62,26 @@ export default function App() {
   });
   const flashAnim = useRef(new Animated.Value(0)).current;
   const flashAnimationRef = useRef<Animated.CompositeAnimation | null>(null);
+  const timeUpPlayer = useAudioPlayer(TIME_UP_SOUND, { keepAudioSessionActive: false });
+
+  useEffect(() => {
+    const configureAudio = async () => {
+      try {
+        await setAudioModeAsync({
+          playsInSilentMode: true,
+          interruptionMode: 'doNotMix',
+          interruptionModeAndroid: 'doNotMix',
+          allowsRecording: false,
+          shouldPlayInBackground: false,
+          shouldRouteThroughEarpiece: false,
+        });
+      } catch (error) {
+        console.warn('Failed to configure audio mode', error);
+      }
+    };
+
+    configureAudio();
+  }, []);
 
   useEffect(() => {
     let timer: ReturnType<typeof setInterval> | undefined;
@@ -77,15 +99,15 @@ export default function App() {
     };
   }, [timeLeft]);
 
-  const stopFlashAnimation = () => {
+  const stopFlashAnimation = useCallback(() => {
     if (flashAnimationRef.current) {
       flashAnimationRef.current.stop();
       flashAnimationRef.current = null;
     }
     flashAnim.setValue(0);
-  };
+  }, [flashAnim]);
 
-  const startFlashAnimation = () => {
+  const startFlashAnimation = useCallback(() => {
     stopFlashAnimation();
 
     flashAnimationRef.current = Animated.loop(
@@ -104,21 +126,56 @@ export default function App() {
     );
 
     flashAnimationRef.current.start();
-  };
+  }, [flashAnim, stopFlashAnimation]);
+
+  const timeUpStatus = useAudioPlayerStatus(timeUpPlayer);
+
+  const playTimeUpSound = useCallback(async () => {
+    if (!timeUpPlayer || !timeUpStatus) {
+      return;
+    }
+
+    try {
+      if (!timeUpStatus.isLoaded) {
+        return;
+      }
+
+      if (timeUpStatus.playing) {
+        timeUpPlayer.pause();
+      }
+
+      await timeUpPlayer.seekTo(0);
+      timeUpPlayer.play();
+    } catch (error) {
+      console.warn('Failed to play time up sound', error);
+    }
+  }, [timeUpPlayer, timeUpStatus]);
 
   useEffect(() => {
     if (timeLeft === 0 && item) {
-      setShowTimeUp(true);
-      startFlashAnimation();
+      if (!showTimeUp) {
+        setShowTimeUp(true);
+        startFlashAnimation();
+        playTimeUpSound();
+      }
     } else {
-      setShowTimeUp(prev => (prev ? false : prev));
+      if (showTimeUp) {
+        setShowTimeUp(false);
+      }
       stopFlashAnimation();
     }
 
     return () => {
       stopFlashAnimation();
     };
-  }, [timeLeft, item]);
+  }, [
+    timeLeft,
+    item,
+    showTimeUp,
+    startFlashAnimation,
+    stopFlashAnimation,
+    playTimeUpSound,
+  ]);
 
   const getRandomItem = () => {
     stopFlashAnimation();
