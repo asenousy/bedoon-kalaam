@@ -461,11 +461,14 @@ const styles = StyleSheet.create({
   itemContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 30,
-    padding: 20,
+    paddingHorizontal: 28,
+    paddingVertical: 32,
     borderRadius: 15,
     backgroundColor: '#FFFFFF',
     width: '100%',
+    minHeight: 220,
     shadowColor: '#FFB74D', // Warm orange shadow
     shadowOffset: {
       width: 0,
