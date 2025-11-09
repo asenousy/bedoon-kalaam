@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
     marginLeft: 16,
   },
   category: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#4A90E2',
     fontWeight: '500',
     marginBottom: 10,
