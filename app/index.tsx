@@ -281,7 +281,7 @@ export default function App() {
           <Text style={styles.categoryEmoji}>{getCategoryEmoji(item.category)}</Text>
         </View>
       ) : (
-        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح!</Text>
+        <Text style={styles.placeholder}>اضغط على الزر للحصول على اقتراح</Text>
       )}
       
       <TouchableOpacity 
@@ -453,11 +453,11 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   timer: {
-    fontSize: 72,
+    fontSize: 96,
     fontWeight: 'bold',
     color: '#FFB74D',
-    marginBottom: 40,
-    letterSpacing: 2,
+    marginBottom: 48,
+    letterSpacing: 3,
     fontFamily: 'System',
   },
   itemContainer: {
@@ -504,9 +504,10 @@ const styles = StyleSheet.create({
     color: '#FF6B6B', // Warm coral red
   },
   placeholder: {
-    fontSize: 18,
+    fontSize: 25,
     color: '#4A90E2', // Bright blue text
     textAlign: 'center',
+    marginTop: 30,
     marginBottom: 30,
     writingDirection: 'rtl',
   },
