@@ -289,7 +289,7 @@ export default function App() {
         onPress={getRandomItem}
       >
         <Text style={styles.buttonText}>
-          اقترح آخر
+          اقتراح آخر
         </Text>
       </TouchableOpacity>
 
@@ -431,8 +431,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF9E6', // Warm light yellow background
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
+    justifyContent: 'flex-start',
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 20,
   },
   settingsIcon: {
     position: 'absolute',
