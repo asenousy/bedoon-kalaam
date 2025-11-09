@@ -1,4 +1,4 @@
-import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal, Animated } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal, Animated, Vibration } from 'react-native';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
@@ -47,6 +47,7 @@ const allItems = [...movies, ...plays, ...songs, ...series];
 const TIME_UP_SOUND = require('../assets/sounds/time-up.mp3');
 const TIMER_MIN_MINUTES = 1;
 const TIMER_STEP_MINUTES = 1;
+const TIME_UP_VIBRATION_PATTERN = [0, 500, 250, 500, 250, 500];
 
 export default function App() {
   const [item, setItem] = useState<Item | null>(null);
@@ -157,16 +158,19 @@ export default function App() {
         setShowTimeUp(true);
         startFlashAnimation();
         playTimeUpSound();
+        Vibration.vibrate(TIME_UP_VIBRATION_PATTERN);
       }
     } else {
       if (showTimeUp) {
         setShowTimeUp(false);
       }
       stopFlashAnimation();
+      Vibration.cancel();
     }
 
     return () => {
       stopFlashAnimation();
+      Vibration.cancel();
     };
   }, [
     timeLeft,
