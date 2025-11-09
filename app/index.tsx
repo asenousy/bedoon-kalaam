@@ -43,6 +43,13 @@ const series: Item[] = (seriesList as string[]).map(title => ({
   category: 'series',
 }));
 
+const CATEGORY_EMOJI: Record<Item['category'], string> = {
+  movies: '🎥',
+  plays: '🎭',
+  songs: '🎵',
+  series: '📺',
+};
+
 const allItems = [...movies, ...plays, ...songs, ...series];
 const TIME_UP_SOUND = require('../assets/sounds/time-up.mp3');
 const TIMER_MIN_MINUTES = 1;
@@ -218,6 +225,8 @@ export default function App() {
       case 'series': return 'مسلسل';
     }
   };
+
+  const getCategoryEmoji = (category: Item['category']) => CATEGORY_EMOJI[category];
   
   const adjustTimer = (deltaMinutes: number) => {
     setTimerMinutes(prev => {
@@ -267,20 +276,7 @@ export default function App() {
         <View style={styles.itemContainer}>
           <View style={styles.categoryContainer}>
             <Text style={styles.category}>{getCategoryTitle(item.category)}</Text>
-            <Ionicons 
-              name={
-                item.category === 'movies'
-                  ? 'film-outline'
-                  : item.category === 'plays'
-                  ? 'ticket-outline'
-                  : item.category === 'songs'
-                  ? 'musical-notes-outline'
-                  : 'tv-outline'
-              } 
-              size={18} 
-              color="#4A90E2" 
-              style={styles.categoryIcon} 
-            />
+            <Text style={styles.categoryEmoji}>{getCategoryEmoji(item.category)}</Text>
           </View>
           <Text style={styles.title}>{item.title}</Text>
         </View>
@@ -319,7 +315,7 @@ export default function App() {
                   <Ionicons name="ellipse-outline" size={24} color="#888888" />
                 )}
                 <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
-                  أفلام
+                  {`${getCategoryEmoji('movies')} أفلام`}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -336,7 +332,7 @@ export default function App() {
                   <Ionicons name="ellipse-outline" size={24} color="#888888" />
                 )}
                 <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
-                  مسرحيات
+                  {`${getCategoryEmoji('plays')} مسرحيات`}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -353,7 +349,7 @@ export default function App() {
                   <Ionicons name="ellipse-outline" size={24} color="#888888" />
                 )}
                 <Text style={[styles.categoryToggleText, categorySettings.series && styles.categoryToggleTextActive]}>
-                  مسلسلات
+                  {`${getCategoryEmoji('series')} مسلسلات`}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -370,7 +366,7 @@ export default function App() {
                   <Ionicons name="ellipse-outline" size={24} color="#888888" />
                 )}
                 <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
-                  أغاني
+                  {`${getCategoryEmoji('songs')} أغاني`}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -467,8 +463,9 @@ const styles = StyleSheet.create({
     alignItems: 'baseline',
     marginBottom: 4,
   },
-  categoryIcon: {
+  categoryEmoji: {
     marginLeft: 6,
+    fontSize: 20,
   },
   category: {
     fontSize: 16,
