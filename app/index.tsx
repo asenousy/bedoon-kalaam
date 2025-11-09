@@ -308,18 +308,19 @@ export default function App() {
               onPress={() => toggleCategory('movies')}
             >
               <View style={styles.categoryToggleContent}>
-                <View style={styles.categoryToggleInfo}>
-                  {categorySettings.movies && (
+                <View style={styles.categoryToggleCheck}>
+                  {categorySettings.movies ? (
                     <Ionicons name="checkmark-circle" size={24} color="white" />
-                  )}
-                  {!categorySettings.movies && (
+                  ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
+                </View>
+                <View style={styles.categoryToggleLabelGroup}>
                   <Text style={[styles.categoryToggleText, categorySettings.movies && styles.categoryToggleTextActive]}>
                     أفلام
                   </Text>
+                  <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('movies')}</Text>
                 </View>
-                <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('movies')}</Text>
               </View>
             </TouchableOpacity>
 
@@ -328,18 +329,19 @@ export default function App() {
               onPress={() => toggleCategory('plays')}
             >
               <View style={styles.categoryToggleContent}>
-                <View style={styles.categoryToggleInfo}>
-                  {categorySettings.plays && (
+                <View style={styles.categoryToggleCheck}>
+                  {categorySettings.plays ? (
                     <Ionicons name="checkmark-circle" size={24} color="white" />
-                  )}
-                  {!categorySettings.plays && (
+                  ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
+                </View>
+                <View style={styles.categoryToggleLabelGroup}>
                   <Text style={[styles.categoryToggleText, categorySettings.plays && styles.categoryToggleTextActive]}>
                     مسرحيات
                   </Text>
+                  <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('plays')}</Text>
                 </View>
-                <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('plays')}</Text>
               </View>
             </TouchableOpacity>
 
@@ -348,18 +350,19 @@ export default function App() {
               onPress={() => toggleCategory('series')}
             >
               <View style={styles.categoryToggleContent}>
-                <View style={styles.categoryToggleInfo}>
-                  {categorySettings.series && (
+                <View style={styles.categoryToggleCheck}>
+                  {categorySettings.series ? (
                     <Ionicons name="checkmark-circle" size={24} color="white" />
-                  )}
-                  {!categorySettings.series && (
+                  ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
+                </View>
+                <View style={styles.categoryToggleLabelGroup}>
                   <Text style={[styles.categoryToggleText, categorySettings.series && styles.categoryToggleTextActive]}>
                     مسلسلات
                   </Text>
+                  <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('series')}</Text>
                 </View>
-                <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('series')}</Text>
               </View>
             </TouchableOpacity>
 
@@ -368,18 +371,19 @@ export default function App() {
               onPress={() => toggleCategory('songs')}
             >
               <View style={styles.categoryToggleContent}>
-                <View style={styles.categoryToggleInfo}>
-                  {categorySettings.songs && (
+                <View style={styles.categoryToggleCheck}>
+                  {categorySettings.songs ? (
                     <Ionicons name="checkmark-circle" size={24} color="white" />
-                  )}
-                  {!categorySettings.songs && (
+                  ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
+                </View>
+                <View style={styles.categoryToggleLabelGroup}>
                   <Text style={[styles.categoryToggleText, categorySettings.songs && styles.categoryToggleTextActive]}>
                     أغاني
                   </Text>
+                  <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('songs')}</Text>
                 </View>
-                <Text style={styles.categoryToggleEmoji}>{getCategoryEmoji('songs')}</Text>
               </View>
             </TouchableOpacity>
 
@@ -597,23 +601,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  categoryToggleInfo: {
+  categoryToggleCheck: {
+    minWidth: 32,
+    alignItems: 'flex-start',
+  },
+  categoryToggleLabelGroup: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   categoryToggleText: {
     fontSize: 18,
     color: '#666666',
     writingDirection: 'rtl',
     fontWeight: '400',
-    marginStart: 8,
+    textAlign: 'right',
+    marginLeft: 8,
   },
   categoryToggleTextActive: {
     color: '#FFFFFF',
   },
   categoryToggleEmoji: {
     fontSize: 32,
-    marginStart: 12,
+    marginLeft: 8,
   },
   closeButton: {
     marginTop: 20,
