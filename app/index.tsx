@@ -285,10 +285,10 @@ export default function App() {
       )}
       
       <TouchableOpacity 
-        style={styles.button}
+        style={[styles.button, styles.primaryButton]}
         onPress={getRandomItem}
       >
-        <Text style={styles.buttonText}>
+        <Text style={[styles.buttonText, styles.primaryButtonText]}>
           اقتراح آخر
         </Text>
       </TouchableOpacity>
@@ -552,12 +552,21 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
+  primaryButton: {
+    paddingVertical: 26,
+    paddingHorizontal: 32,
+    borderRadius: 22,
+    marginTop: 32,
+  },
   buttonText: {
     color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     textAlign: 'center',
     writingDirection: 'rtl',
+  },
+  primaryButtonText: {
+    fontSize: 22,
   },
   modalOverlay: {
     flex: 1,
