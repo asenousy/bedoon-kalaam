@@ -2,10 +2,10 @@ import { View, StyleSheet, TouchableOpacity, Text, I18nManager, Modal, Animated,
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useAudioPlayer, useAudioPlayerStatus, setAudioModeAsync } from 'expo-audio';
-import moviesList from '../movies.json';
-import playsList from '../plays.json';
-import songsList from '../songs.json';
-import seriesList from '../series.json';
+import moviesList from '../data/movies.json';
+import playsList from '../data/plays.json';
+import songsList from '../data/songs.json';
+import seriesList from '../data/series.json';
 
 // Force RTL layout
 I18nManager.allowRTL(true);
