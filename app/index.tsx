@@ -268,7 +268,7 @@ export default function App() {
             },
           ]}
         >
-          <Ionicons name="alarm-outline" size={32} color="#FFFFFF" style={styles.timeUpIcon} />
+          <Ionicons name="alarm-outline" size={32} color="#E53935" style={styles.timeUpIcon} />
           <Text style={styles.timeUpText}>انتهى الوقت!</Text>
         </Animated.View>
       )}
@@ -310,7 +310,7 @@ export default function App() {
               <View style={styles.categoryToggleContent}>
                 <View style={styles.categoryToggleCheck}>
                   {categorySettings.movies ? (
-                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                    <Ionicons name="checkmark-circle" size={24} color="#FF6B6B" />
                   ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
@@ -331,7 +331,7 @@ export default function App() {
               <View style={styles.categoryToggleContent}>
                 <View style={styles.categoryToggleCheck}>
                   {categorySettings.plays ? (
-                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                    <Ionicons name="checkmark-circle" size={24} color="#FF6B6B" />
                   ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
@@ -352,7 +352,7 @@ export default function App() {
               <View style={styles.categoryToggleContent}>
                 <View style={styles.categoryToggleCheck}>
                   {categorySettings.series ? (
-                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                    <Ionicons name="checkmark-circle" size={24} color="#FF6B6B" />
                   ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
@@ -373,7 +373,7 @@ export default function App() {
               <View style={styles.categoryToggleContent}>
                 <View style={styles.categoryToggleCheck}>
                   {categorySettings.songs ? (
-                    <Ionicons name="checkmark-circle" size={24} color="white" />
+                    <Ionicons name="checkmark-circle" size={24} color="#FF6B6B" />
                   ) : (
                     <Ionicons name="ellipse-outline" size={24} color="#888888" />
                   )}
@@ -429,7 +429,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFF9E6', // Warm light yellow background
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'flex-start',
     paddingHorizontal: 20,
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 20,
     backgroundColor: '#FFFFFF',
-    shadowColor: '#4A90E2',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     width: '100%',
     minHeight: 220,
-    shadowColor: '#FFB74D', // Warm orange shadow
+    shadowColor: '#000000', // Neutral drop shadow
     shadowOffset: {
       width: 0,
       height: 4,
@@ -515,11 +515,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E53935',
+    backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
     paddingVertical: 16,
     borderRadius: 14,
-    shadowColor: '#E53935',
+    borderWidth: 2,
+    borderColor: '#E53935',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 6,
@@ -533,7 +535,7 @@ const styles = StyleSheet.create({
     marginStart: 12,
   },
   timeUpText: {
-    color: '#FFFFFF',
+    color: '#E53935',
     fontSize: 30,
     fontWeight: '800',
     letterSpacing: 1,
@@ -544,7 +546,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     width: '100%',
-    shadowColor: '#FF6B6B', // Warm coral red shadow
+    shadowColor: '#000000', // Neutral drop shadow
     shadowOffset: {
       width: 0,
       height: 4,
@@ -571,7 +573,7 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -593,15 +595,15 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderRadius: 12,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#FFFFFF',
     marginBottom: 10,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: '#EEEEEE',
   },
   categoryToggleActive: {
-    backgroundColor: '#FF6B6B',
-    borderColor: '#E05050',
-    shadowColor: '#FF6B6B',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#FF6B6B',
+    shadowColor: '#000000',
     shadowOffset: {
       width: 0,
       height: 2,
@@ -634,7 +636,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   categoryToggleTextActive: {
-    color: '#FFFFFF',
+    color: '#FF6B6B',
   },
   categoryToggleEmoji: {
     fontSize: 32,
@@ -649,7 +651,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 16,
     borderRadius: 12,
-    backgroundColor: '#F5F7FB',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E0E7FF',
   },
   timerLabel: {
     fontSize: 16,
