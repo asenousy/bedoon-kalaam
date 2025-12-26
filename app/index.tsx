@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
   timer: {
     fontSize: 96,
     fontWeight: 'bold',
-    color: '#FFB74D',
+    color: '#777777',
     marginBottom: 48,
     letterSpacing: 3,
     fontFamily: 'System',
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     writingDirection: 'rtl',
-    color: '#FF6B6B', // Warm coral red
+    color: '#000000',
   },
   placeholder: {
     fontSize: 25,
